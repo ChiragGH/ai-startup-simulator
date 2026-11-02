@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description" content="AI Startup Simulator — Build your AI empire from a bedroom to world domination. A vibrant tycoon idle game.">
+    <meta name="theme-color" content="#151538">
+    <title>AI Startup Simulator</title>
+    <!-- Google Fonts — Game-friendly fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- ======== TOP BAR ======== -->
+    <header class="top-bar" id="top-bar">
+        <div class="top-bar-left">
+            <img src="assets/icon_logo.svg" alt="⚡" class="game-icon game-icon-sm">
+            <h1 class="logo-text">AI Startup Simulator</h1>
+            <span class="hq-badge" id="hq-badge">
+                <img src="assets/hq_bedroom.svg" alt="🏠" class="game-icon-xs"> Bedroom
+            </span>
+        </div>
+        <div class="top-bar-right">
+            <div class="stat-pill stat-data">
+                <img src="assets/icon_data.svg" alt="🗄️" class="game-icon-xs">
+                <span class="stat-value" id="header-data">0</span>
+            </div>
+            <div class="stat-pill stat-capital">
+                <img src="assets/icon_capital.svg" alt="💰" class="game-icon-xs">
+                <span class="stat-value" id="header-capital">$0</span>
+            </div>
+            <div class="stat-pill stat-agi" id="header-agi-pill" style="display:none;">
+                <img src="assets/icon_agi.svg" alt="🧠" class="game-icon-xs">
+                <span class="stat-value" id="header-agi-level">Lv.0</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- ======== GAME WRAPPER ======== -->
+    <div class="game-wrapper">
+        <main class="tab-content-area" id="tab-content-area">
+
+            <!-- ══════════════════════════════════
+                 TAB 1: DASHBOARD
+                 ══════════════════════════════════ -->
+            <section class="tab-panel active" id="tab-dashboard">
+
+                <!-- Wallet Panel -->
+                <div class="game-panel panel-wallet">
+                    <h2 class="panel-title"><img src="assets/icon_wallet.svg" alt="💳" class="game-icon-xs"> Wallet</h2>
+                    <div class="wallet-grid">
+                        <div class="wallet-card wallet-data">
+                            <img src="assets/icon_data.svg" alt="🗄️" class="game-icon">
+                            <div class="wallet-info">
+                                <span class="wallet-label">Data Tokens</span>
+                                <span class="wallet-value" id="display-data">0</span>
+                            </div>
+                        </div>
+                        <div class="wallet-card wallet-capital">
+                            <img src="assets/icon_capital.svg" alt="💰" class="game-icon">
+                            <div class="wallet-info">
+                                <span class="wallet-label">Capital</span>
+                                <span class="wallet-value" id="display-capital">$0</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="income-summary">
+                        <span class="income-line"><span class="income-tag">📊</span> <span id="display-dps">0</span> Data/sec</span>
+                        <span class="income-line"><span class="income-tag">💵</span> $<span id="display-cps">0</span>/sec</span>
+                        <span class="income-line"><span class="income-tag">⛏️</span> Click: <span id="display-click-power">1</span></span>
+                        <span class="income-line multiplier-line" id="multiplier-line" style="display:none;"><span class="income-tag">🧠</span> AGI Mult: <span id="display-multiplier">x1.0</span></span>
+                    </div>
+                </div>
+
+                <!-- ★ MEGA SCRAPE BUTTON ★ -->
+                <div class="scrape-section" id="scrape-wrapper">
+                    <button class="scrape-mega-btn" id="btn-scrape">
+                        <img src="assets/icon_scrape.svg" alt="⛏️" class="scrape-icon game-icon">
+                        <span class="scrape-label">SCRAPE DATA</span>
+                        <span class="scrape-sub">+<span id="scrape-power-label">1</span> Data per click</span>
+                    </button>
+                </div>
+
+                <!-- Sell Panel -->
+                <div class="game-panel panel-actions">
+                    <h2 class="panel-title"><img src="assets/icon_sell.svg" alt="🏷️" class="game-icon-xs"> Sell Data</h2>
+                    <div class="sell-row">
+                        <div class="sell-input-group">
+                            <input type="number" id="sell-amount-input" class="game-input" min="0" value="0" step="10">
+                            <span class="sell-preview" id="sell-preview-text">You will get: $0</span>
+                        </div>
+                        <div class="sell-buttons">
+                            <button class="game-btn btn-green" id="btn-sell-custom" disabled>
+                                <span class="btn-label">Sell Data</span>
+                            </button>
+                            <button class="game-btn btn-gold" id="btn-sell-all" disabled>
+                                <span class="btn-label">Sell All</span>
+                                <span class="btn-sub" id="sell-all-preview">—</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Boost Panel -->
+                <div class="game-panel panel-boost">
+                    <h2 class="panel-title"><img src="assets/icon_boost.svg" alt="🚀" class="game-icon-xs"> Boost</h2>
+                    <button class="game-btn btn-cyan btn-wide" id="btn-boost">
+                        <span class="btn-label" id="boost-label">Boost: +10 CPS for 30s</span>
+                        <span class="btn-sub" id="boost-sub">Simulate watching an Ad</span>
+                    </button>
+                    <div class="boost-bar-track" id="boost-bar-track">
+                        <div class="boost-bar-fill" id="boost-bar-fill"></div>
+                    </div>
+                </div>
+
+                <!-- HQ Panel -->
+                <div class="game-panel panel-hq">
+                    <div class="hq-display">
+                        <img src="assets/hq_bedroom.svg" alt="🏠" class="game-icon game-icon-lg" id="hq-emoji">
+                        <div class="hq-info">
+                            <span class="hq-level-label">Headquarters</span>
+                            <span class="hq-level-name" id="hq-level-name">Bedroom</span>
+                        </div>
+                        <button class="game-btn btn-gold btn-sm" id="btn-hq-upgrade" disabled>
+                            <span id="hq-upgrade-text">Next: $500</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Reset -->
+                <div class="game-panel panel-reset">
+                    <button class="game-btn btn-red btn-sm" id="btn-reset">🗑️ Hard Reset</button>
+                    <span class="reset-hint">Saved: <span id="last-save-time">—</span></span>
+                </div>
+            </section>
+
+            <!-- ══════════════════════════════════
+                 TAB 2: TECH SHOP (3 Categories)
+                 ══════════════════════════════════ -->
+            <section class="tab-panel" id="tab-shop">
+                <div class="game-panel panel-shop">
+                    <h2 class="panel-title"><img src="assets/icon_shop.svg" alt="🛒" class="game-icon-xs"> Tech Shop</h2>
+                    <p class="panel-subtitle">Automate your data empire. 18 upgrades across 3 categories.</p>
+
+                    <!-- Category 1: Data Scraping -->
+                    <div class="shop-category cat-data">
+                        <h3 class="shop-category-title">📊 Data Scraping</h3>
+                        <div class="shop-list" id="shop-cat-data">
+                            <!-- Rendered dynamically by renderShop() -->
+                        </div>
+                    </div>
+
+                    <!-- Category 2: Money Making -->
+                    <div class="shop-category cat-money">
+                        <h3 class="shop-category-title">💰 Money Making</h3>
+                        <div class="shop-list" id="shop-cat-capital">
+                            <!-- Rendered dynamically by renderShop() -->
+                        </div>
+                    </div>
+
+                    <!-- Category 3: Click Upgrades -->
+                    <div class="shop-category cat-click">
+                        <h3 class="shop-category-title">⚡ Click Upgrades</h3>
+                        <div class="shop-list" id="shop-cat-click">
+                            <!-- Rendered dynamically by renderShop() -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ══════════════════════════════════
+                 TAB 3: PROJECT AGI
+                 ══════════════════════════════════ -->
+            <section class="tab-panel" id="tab-agi">
+                <div class="game-panel agi-panel">
+                    <div class="agi-header">
+                        <div class="agi-orb-container">
+                            <div class="agi-orb" id="agi-orb">
+                                <span class="agi-orb-text" id="agi-orb-text">🧠</span>
+                            </div>
+                            <div class="agi-orb-ring"></div>
+                        </div>
+                        <h2 class="agi-title">Project AGI</h2>
+                        <p class="agi-subtitle" id="agi-subtitle">Feed it knowledge. Watch it grow. What could go wrong?</p>
+                    </div>
+
+                    <div class="agi-level-display">
+                        <span class="agi-level-label">Knowledge Level</span>
+                        <span class="agi-level-value" id="agi-level-display">0</span>
+                    </div>
+
+                    <div class="agi-progress-track" id="agi-progress-track">
+                        <div class="agi-progress-fill" id="agi-progress-fill" style="width:0%"></div>
+                        <span class="agi-progress-text" id="agi-progress-text">0%</span>
+                    </div>
+
+                    <div class="agi-feed-section">
+                        <div class="agi-feed-cost">
+                            <span>Cost to feed:</span>
+                            <span id="agi-feed-data-cost">500 Data</span>
+                            <span>+</span>
+                            <span id="agi-feed-capital-cost">$50</span>
+                        </div>
+                        <button class="game-btn btn-purple btn-wide" id="btn-agi-feed" disabled>
+                            <span class="btn-label">🔬 Feed the AGI</span>
+                            <span class="btn-sub" id="agi-feed-sub">Contribute knowledge to the Core</span>
+                        </button>
+                    </div>
+
+                    <div class="agi-multiplier-display" id="agi-multiplier-display">
+                        <span>Global Income Multiplier:</span>
+                        <span class="agi-mult-value" id="agi-mult-value">x1.00</span>
+                    </div>
+                </div>
+
+                <!-- AGI Communication Log -->
+                <div class="agi-log-panel">
+                    <div class="agi-log-header">🤖 AGI Communication Log</div>
+                    <div class="agi-log-body" id="terminal-agi-body">
+                        <div class="agi-log-line">
+                            <span class="agi-log-prompt">▶</span>
+                            <span class="agi-log-text">Awaiting initialization...</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ══════════════════════════════════
+                 TAB 4: MY OFFICE
+                 ══════════════════════════════════ -->
+            <section class="tab-panel" id="tab-office">
+                <div class="game-panel panel-office">
+                    <h2 class="panel-title"><img src="assets/icon_office.svg" alt="🏢" class="game-icon-xs"> My Office</h2>
+                    <p class="panel-subtitle">Your growing empire at a glance.</p>
+                    <div class="office-grid" id="office-grid">
+                        <!-- Rendered dynamically by renderOffice() -->
+                    </div>
+                    <div class="office-status" id="office-status">
+                        <span class="status-dot"></span>
+                        <span>HQ: <strong id="office-hq-name">Bedroom</strong></span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ══════════════════════════════════
+                 TAB 5: MARKETS
+                 ══════════════════════════════════ -->
+            <section class="tab-panel" id="tab-markets">
+                <div class="game-panel panel-markets">
+                    <h2 class="panel-title"><img src="assets/icon_markets.svg" alt="📈" class="game-icon-xs"> Investment Market</h2>
+                    <p class="panel-subtitle">Trade tech stocks. Enter quantity and click Buy/Sell.</p>
+                    <div class="market-list" id="market-list">
+                        <!-- Rendered dynamically by renderMarkets() -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- ══════════════════════════════════
+                 TAB 6: CONTRACTS & NETWORKING
+                 ══════════════════════════════════ -->
+            <section class="tab-panel" id="tab-contracts">
+                <div class="game-panel panel-contracts">
+                    <h2 class="panel-title"><img src="assets/icon_contracts.svg" alt="📝" class="game-icon-xs"> Contracts & Networking</h2>
+                    <p class="panel-subtitle">Fulfill contracts to earn Capital and build your Reputation.</p>
+                    <div class="reputation-display">
+                        <span class="reputation-label">Your Reputation</span>
+                        <div class="reputation-stars">
+                            <span class="reputation-icon">⭐</span>
+                            <span class="reputation-value" id="reputation-value">0</span>
+                        </div>
+                        <span class="reputation-hint">Higher reputation = bigger contracts</span>
+                    </div>
+                    <div class="contracts-list" id="contracts-list">
+                        <!-- Rendered dynamically by renderContracts() -->
+                    </div>
+                    <p class="contracts-empty-hint" id="contracts-empty-hint">New contracts appear every 15–30 seconds...</p>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- ======== BOTTOM NAVIGATION ======== -->
+    <nav class="bottom-nav" id="bottom-nav">
+        <button class="nav-tab active" data-tab="tab-dashboard" id="nav-dashboard">
+            <span class="nav-icon">📊</span>
+            <span class="nav-label">Dashboard</span>
+        </button>
+        <button class="nav-tab" data-tab="tab-shop" id="nav-shop">
+            <span class="nav-icon">🛒</span>
+            <span class="nav-label">Shop</span>
+        </button>
+        <button class="nav-tab" data-tab="tab-agi" id="nav-agi">
+            <span class="nav-icon">🧠</span>
+            <span class="nav-label">AGI</span>
+        </button>
+        <button class="nav-tab" data-tab="tab-office" id="nav-office">
+            <span class="nav-icon">🏢</span>
+            <span class="nav-label">Office</span>
+        </button>
+        <button class="nav-tab" data-tab="tab-markets" id="nav-markets">
+            <span class="nav-icon">📈</span>
+            <span class="nav-label">Markets</span>
+        </button>
+        <button class="nav-tab" data-tab="tab-contracts" id="nav-contracts">
+            <span class="nav-icon">📝</span>
+            <span class="nav-label">Contracts</span>
+        </button>
+    </nav>
+
+    <!-- ======== RPG DIALOGUE OVERLAY ======== -->
+    <div class="dialogue-overlay" id="dialogue-overlay">
+        <div class="dialogue-backdrop" id="dialogue-backdrop"></div>
+        <div class="dialogue-box">
+            <div class="dialogue-top">
+                <img src="assets/mentor.svg" alt="Mr. X" class="dialogue-avatar" id="dialogue-avatar">
+                <div class="dialogue-content">
+                    <div class="dialogue-speaker" id="dialogue-speaker-name">Mr. X</div>
+                    <div class="dialogue-text" id="dialogue-text"></div>
+                </div>
+            </div>
+            <button class="dialogue-next-btn" id="btn-dialogue-next">Next ▶</button>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
